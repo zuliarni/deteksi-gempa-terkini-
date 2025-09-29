@@ -39,11 +39,11 @@ def ekstraksi_data():
 
 
         for res in result:
-            if i == 1
+            if i == 1:
                 magnitudo = res.text
-            elif i == 2
+            elif i == 2:
                 kedalaman = res.text
-            elif i == 3
+            elif i == 3:
                 koordinat = res.text.split(',')
                 ls = koordinat[0]
                 bt = koordinat[1]
@@ -79,7 +79,7 @@ def tampilkan_data(result):
     print(f"magnitudo {result['magnitudo']}")
     print(f"kedalaman {result['kedalaman']}")
     print(f"lokasi {result['lokasi']}")
-    print(f"koordinat: LS={result['koordinat]['ls']}, BT={result['koordinat']['bt']}")
+    print(f"koordinat: LS={result['koordinat']['ls']}, BT={result['koordinat']['bt']}")
     print(f"pusat  {result['pusat']}")
 
 
