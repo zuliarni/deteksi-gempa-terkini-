@@ -1,43 +1,90 @@
+import requests
+from bs4 import BeautifulSoup
+
 def ekstraksi_data():
     """
-
-    tanggal : 24 agustus 2021
-    waktu : 12:05:52 WIB
-    magnitudo : 4.0
-    kedalaman : 40 km
-    lokasi : LS= 1.48  BT= 134.01
-    pusat gempa : pusat gempa berada di darat 18 km barat laut ransiki
-    dirasakan : (skala MMI): II-III manokwari, II_III ransiki
+    tanggal:24 agustus 2021
+    waktu:24 agustus 2021
+    magnitudo:4.0
+    kedalaman:40km
+    lokasi: LS=1.48 BT=134.01
+    pusat gempa: pusat gempa berada di darat 18 km barat laut Ransiki
+    dirasakan: dirasakan (skala MMI): II-III Manokwari, II-III Ransiki
     :return:
     """
 
+    try:
+        content = requests.get('https://bmkg.go.id')
+    except Exception :
+        return None
 
-    hasil = dict()
-    hasil ['tanggal'] = '24 agustus 2021'
-    hasil ['waktu'] = '12.05.52 WIB'
-    hasil ['magnitudo'] = '4.0'
-    hasil ['kedalaman'] = '40 km'
-    hasil ['lokasi'] = {'ls':1.48, 'bt':134.01}
-    hasil ['pusat'] = 'pusat gempa berada di darat 18 km barat laut ransiki'
-    hasil ['dirasakan'] = '(skala MMI): II-III manokwari, II_III ransiki'
+    if content.status_code == 200:
+        soup = BeautifulSoup(content.text, 'html.parser')
 
+        result  = soup.find('span', {'class' : 'waktu'})
+        result  = result.text.split(', ')
+        tanggal = result[0]
+        waktu = result[1]
+
+        result = soup.find ('div' , {'class' : 'col-md-6  col-xs-6  gempabumi-detail no-padding'})
+        result = result.findchildren('li')
+        i = 0
+        magnitudo = none
+        kedalaman = none
+        ls = none
+        bt = none
+        lokasi = none
+        dirasakan = none
+
+
+
+        for res in result:
+            if i == 1
+                magnitudo = res.text
+            elif i == 2
+                kedalaman = res.text
+            elif i == 3
+                koordinat = res.text.split(',')
+                ls = koordinat[0]
+                bt = koordinat[1]
+            elif i == 4:
+                lokasi = res.text
+            elif i == 5:
+                dirasakan = res.text
+            i = i + 1
+
+
+
+        hasil = dict()
+        hasil['tanggal'] = tanggal
+        hasil['waktu'] = waktu
+        hasil['magnitudo'] = magnitudo
+        hasil['kedalaman'] = kedalaman
+        hasil['koordinat'] = {'ls': ls, 'bt' : bt}
+        hasil['lokasi'] = lokasi
+        hasil['dirasakan'] = dirasakan
         return hasil
+    else:
+        return None
 
 
-def tampilkan_data(result) :
-    print ('gempa terakhir berdasarkan BMKG')
-    print (f"tanggal {result['tanggal']}")
-    print (f"waktu  {result['waktu']}")
-    print (f"magnitudo {result['magnitudo']}")
-    print (f"lokasi :  LS={result['lokasi']['ls']}, BT={result['lokasi']['bt']}")
-    print (f"pusat {result['pusat']}")
-    print (f"dirasakan {result['dirasakan']}")
+def tampilkan_data(result):
+    if result is None :
+        print('tidak bisa menemukan data gempa terkini')
+        return
+
+    print('gempa terakhir berdasarkan BMKG')
+    print(f"tanggal {result['tanggal']}")
+    print(f"waktu {result['waktu']}")
+    print(f"magnitudo {result['magnitudo']}")
+    print(f"kedalaman {result['kedalaman']}")
+    print(f"lokasi {result['lokasi']}")
+    print(f"koordinat: LS={result['koordinat]['ls']}, BT={result['koordinat']['bt']}")
+    print(f"pusat  {result['pusat']}")
+
 
 
 
 if __name__ == '__main__':
-   print('ini adalah package gempaterkini')
-
-
-
-
+    print('ini adalah package gempaterkini')
+    print('hai')
